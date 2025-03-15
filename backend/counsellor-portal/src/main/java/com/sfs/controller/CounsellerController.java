@@ -35,7 +35,6 @@ public class CounsellerController {
 			throw new ResourcesNotFoundException("Register Details should not be empty...");
 		}		
 		ResponseEntity<String> response= null;
-		String status = null;
 		LOGGER.info("User Registation Start...");
 		response = service.register(details);		
 		LOGGER.info("User Registration Successfully Complete...");		
@@ -48,7 +47,6 @@ public class CounsellerController {
 			throw new ResourcesNotFoundException("Login Details should not be empty...");
 		}		
 		ResponseEntity<String> response= null;
-		String status = null;
 		LOGGER.info("User Registation Start...");
 		response = service.login(details);		
 		LOGGER.info("User Registration Successfully Complete...");		
