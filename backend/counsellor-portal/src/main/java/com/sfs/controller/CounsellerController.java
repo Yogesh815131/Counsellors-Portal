@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sfs.entities.CounsellorDetails;
+import com.sfs.entities.Enquiries;
 import com.sfs.excetion.ResourcesNotFoundException;
 import com.sfs.service.CounsellorService;
 
@@ -50,6 +51,18 @@ public class CounsellerController {
 		LOGGER.info("User Registation Start...");
 		response = service.login(details);		
 		LOGGER.info("User Registration Successfully Complete...");		
+		return response;
+	}
+	
+	@PostMapping("/enquiry")
+	public ResponseEntity<String> enquiry(@RequestBody Enquiries details){
+		if(details == null) {
+			throw new ResourcesNotFoundException("Enquiry Details should not be empty...");
+		}		
+		ResponseEntity<String> response= null;
+		LOGGER.info("Enquiry Insert Start...");
+		response = service.addEnquiry(details);		
+		LOGGER.info("Enquiry Insert Successfully Completed...");		
 		return response;
 	}
 	

@@ -1,10 +1,15 @@
 package com.sfs.entities;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,6 +24,15 @@ public class CounsellorDetails {
 	private String password;
 	private String phno;
 	
+	@OneToMany(mappedBy = "counsellorDetails", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Enquiries> enquiries;
+	
+	public List<Enquiries> getEnquiries() {
+		return enquiries;
+	}
+	public void setEnquiries(List<Enquiries> enquiries) {
+		this.enquiries = enquiries;
+	}
 	public String getName() {
 		return name;
 	}
@@ -54,7 +68,7 @@ public class CounsellorDetails {
 	@Override
 	public String toString() {
 		return "CounsellorDetails [cid=" + cid + ", name=" + name + ", email=" + email + ", password=" + password
-				+ ", phno=" + phno + "]";
+				+ ", phno=" + phno + ", enquiries=" + enquiries + "]";
 	}
 	
 	

@@ -4,15 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.sfs.entities.CounsellorDetails;
+import com.sfs.entities.Enquiries;
 import com.sfs.repository.CounsellorRepo;
+import com.sfs.repository.Enquiriesrepo;
 
 @Service
 public class CounsellorService {
 	
 	@Autowired
 	private CounsellorRepo repo;
+	
+	@Autowired
+	private Enquiriesrepo enquiriesrepo;
 
 	public ResponseEntity<String> register(CounsellorDetails details) {		
 		CounsellorDetails userDetail = null, userDetails1 = null;
@@ -53,6 +59,22 @@ public class CounsellorService {
 		return response;
 	}
 	
-	
+	public ResponseEntity<String> addEnquiry(@RequestBody Enquiries reqEnquiry){
+		ResponseEntity<String> response = null;
+		Enquiries enquiry = null;
+		
+		try {
+			enquiry = enquiriesrepo.save(reqEnquiry);
+			if(enquiry != null) {
+				response = new ResponseEntity<>("Inquiry Inserted successfully...", HttpStatus.OK);
+			}else {
+				response = new ResponseEntity<>("somthing went wrong...", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
 
 }
