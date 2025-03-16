@@ -1,5 +1,8 @@
 package com.sfs.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,10 +31,18 @@ public class Enquiries {
 	@Column(name = "status")
 	private String status;
 	
-	@ManyToOne
-	@JoinColumn(name = "cid")
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
+	@JsonBackReference
 	private CounsellorDetails counsellorDetails;
 	
+	
+	public CounsellorDetails getCounsellorDetails() {
+		return counsellorDetails;
+	}
+	public void setCounsellorDetails(CounsellorDetails counsellorDetails) {
+		this.counsellorDetails = counsellorDetails;
+	}
 	public Long getEid() {
 		return eid;
 	}

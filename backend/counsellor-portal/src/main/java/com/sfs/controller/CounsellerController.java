@@ -1,11 +1,14 @@
 package com.sfs.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sfs.entities.CounsellorDetails;
 import com.sfs.entities.Enquiries;
 import com.sfs.excetion.ResourcesNotFoundException;
+import com.sfs.response.StatusCount;
 import com.sfs.service.CounsellorService;
+
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api")
@@ -65,6 +71,36 @@ public class CounsellerController {
 		LOGGER.info("Enquiry Insert Successfully Completed...");		
 		return response;
 	}
+	
+	@GetMapping("/enquiry/{eid}")
+	public ResponseEntity<Enquiries> getEnquiry(@PathVariable long eid){		
+		ResponseEntity<Enquiries> response= null;
+		LOGGER.info("Enquiry Insert Start...");
+		response = service.getEnquiry(eid);		
+		LOGGER.info("Enquiry Insert Successfully Completed...");		
+		return response;
+	}
+	
+	@GetMapping("/enquiries/{cid}")
+	public ResponseEntity<List<StatusCount>> getEnquiryStatus(@PathVariable int cid){		
+		ResponseEntity<List<StatusCount>> response= null;
+		LOGGER.info("Enquiry Fetching...");
+		response = service.getStatusByCount(cid);	
+		LOGGER.info("Enquiry Data Fetched.");		
+		return response;
+	}
+	
+	
+	@GetMapping("/all/enquiries/{cid}")
+	public ResponseEntity<Enquiries[]> getAllEnquiries(@PathVariable int cid){
+		ResponseEntity<Enquiries[]> response = null;
+		LOGGER.info("All Enquiries Fetching...");
+		response = service.getAllEnquiries(cid);
+		LOGGER.info("All Enquiries Fetched.");
+		return response;
+	}
+	
+	
 	
 
 }
