@@ -25,4 +25,10 @@ public interface Enquiriesrepo extends JpaRepository<Enquiries, Long>{
 	@Query(value = "select * from enquiries e where e.eid = :eid", nativeQuery = true)
 	Enquiries findByEid(@Param("eid") long eid);
 	
+	Enquiries[] findByClassMode(String classMode);
+	
+	Enquiries[] findByCourse(String course);
+	
+	Enquiries[] findByStatus(String status);
+	
 }

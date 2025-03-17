@@ -134,5 +134,52 @@ public class CounsellorService {
 		}
 		return response;
 	}
+	
+	public ResponseEntity<Enquiries[]> getClassMode(String classMode){
+		ResponseEntity<Enquiries[]> response = null;
+		Enquiries[] obj = null;
+		try {
+			obj = enquiriesrepo.findByClassMode(classMode);
+			if(obj != null) {
+				response = new ResponseEntity<>(obj, HttpStatus.OK);
+			}else {
+				response = new ResponseEntity<>(obj, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	public ResponseEntity<Enquiries[]> getCourse(String course){
+		ResponseEntity<Enquiries[]> response = null;
+		Enquiries[] obj = null;
+		try {
+			obj = enquiriesrepo.findByCourse(course);
+			if(obj != null) {
+				response = new ResponseEntity<>(obj, HttpStatus.OK);
+			}else {
+				response = new ResponseEntity<>(obj, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
 
+	public ResponseEntity<Enquiries[]> getStatus(String status){
+		ResponseEntity<Enquiries[]> response = null;
+		Enquiries[] obj = null;
+		try {
+			obj = enquiriesrepo.findByStatus(status);
+			if(obj != null) {
+				response = new ResponseEntity<>(obj, HttpStatus.OK);
+			}else {
+				response = new ResponseEntity<>(obj, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
 }

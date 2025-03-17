@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sfs.entities.CounsellorDetails;
 import com.sfs.entities.Enquiries;
 import com.sfs.excetion.ResourcesNotFoundException;
+import com.sfs.request.ReqParam;
 import com.sfs.response.StatusCount;
 import com.sfs.service.CounsellorService;
-
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api")
@@ -81,7 +80,7 @@ public class CounsellerController {
 		return response;
 	}
 	
-	@GetMapping("/enquiries/{cid}")
+	@GetMapping("/statuscount/{cid}")
 	public ResponseEntity<List<StatusCount>> getEnquiryStatus(@PathVariable int cid){		
 		ResponseEntity<List<StatusCount>> response= null;
 		LOGGER.info("Enquiry Fetching...");
@@ -100,7 +99,31 @@ public class CounsellerController {
 		return response;
 	}
 	
+	@PostMapping("/classmode")
+	public ResponseEntity<Enquiries[]> getClassMode(@RequestBody ReqParam classMode){
+		ResponseEntity<Enquiries[]> response = null;
+		LOGGER.info("All Enquiries Fetching...");
+		response = service.getClassMode(classMode.getClassMode());
+		LOGGER.info("All Enquiries Fetched.");
+		return response;
+	}
 	
+	@PostMapping("/course")
+	public ResponseEntity<Enquiries[]> getCourse(@RequestBody ReqParam course){
+		ResponseEntity<Enquiries[]> response = null;
+		LOGGER.info("All Enquiries Fetching...");
+		response = service.getCourse(course.getCourse());
+		LOGGER.info("All Enquiries Fetched.");
+		return response;
+	}
 	
+	@PostMapping("/status")
+	public ResponseEntity<Enquiries[]> getStatus(@RequestBody ReqParam status){
+		ResponseEntity<Enquiries[]> response = null;
+		LOGGER.info("All Enquiries Fetching...");
+		response = service.getStatus(status.getStatus());
+		LOGGER.info("All Enquiries Fetched.");
+		return response;
+	}	
 
 }
