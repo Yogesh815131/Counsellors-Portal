@@ -9,26 +9,43 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.sfs.entities.Enquiries;
-import com.sfs.response.StatusCount;
+import com.sfs.response.DashbordRes;
 
 import jakarta.transaction.Transactional;
 
 @Repository
 public interface Enquiriesrepo extends JpaRepository<Enquiries, Long>{
 	
-	@Query(value = "SELECT e.status, COUNT(e.status) as count FROM enquiries e WHERE e.cid = :cid GROUP BY e.status", nativeQuery = true)
-	List<StatusCount> getStatusByCount(@Param("cid") int cid);
+	@Query(value = "SELECT * from enquiries e WHERE e.cid = :cid", nativeQuery = true)
+	List<Enquiries> getStatusByCount(@Param("cid") int cid);
 	
 	@Query(value = "SELECT DISTINCT e.* FROM enquiries e WHERE e.cid = :cid", nativeQuery = true)
-	Enquiries[] findByCid(@Param("cid") int cid);
+	List<Enquiries> findByCid(@Param("cid") int cid);
 
-	@Query(value = "select * from enquiries e where e.eid = :eid", nativeQuery = true)
-	Enquiries findByEid(@Param("eid") long eid);
+	@Query(value = "select * from enquiries e where e.eid = :eid and e.cid = :cid", nativeQuery = true)
+	Enquiries findByEid(@Param("eid") long eid, @Param("cid") int cid);
+	
+	
+	@Query(value = "select * from enquiries where eid = :eid and cid = :cid", nativeQuery = true)
+	public Enquiries findByEidAndCid(@Param("eid") long eid,@Param("cid") int cid); 
 	
 	Enquiries[] findByClassMode(String classMode);
 	
 	Enquiries[] findByCourse(String course);
 	
 	Enquiries[] findByStatus(String status);
+	
+	
+	@Modifying
+    @Transactional
+    @Query(value = "UPDATE enquiries SET ename = :ename, phno = :phno, class_Mode = :classMode, course = :course, status = :status WHERE eid = :eid AND cid = :cid", 
+           nativeQuery = true)
+    int updateEnquiry(@Param("ename") String ename, 
+                      @Param("phno") String phno,
+                      @Param("classMode") String classMode,
+                      @Param("course") String course,
+                      @Param("status") String status,
+                      @Param("eid") Long eid,
+                      @Param("cid") int cid);
 	
 }

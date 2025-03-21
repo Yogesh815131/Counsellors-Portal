@@ -1,6 +1,10 @@
 package com.sfs.entities;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -25,16 +29,23 @@ public class CounsellorDetails {
 	private String email;
 	private String password;
 	private String phno;
+	@CreationTimestamp
+	private LocalDate createTime;
+	@UpdateTimestamp
+	private LocalDate updateTime;
+
 	
-	@OneToMany(mappedBy = "counsellorDetails", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonManagedReference
-	private List<Enquiries> enquiries;
-	
-	public List<Enquiries> getEnquiries() {
-		return enquiries;
+	public LocalDate getCreateTime() {
+		return createTime;
 	}
-	public void setEnquiries(List<Enquiries> enquiries) {
-		this.enquiries = enquiries;
+	public void setCreateTime(LocalDate createTime) {
+		this.createTime = createTime;
+	}
+	public LocalDate getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(LocalDate updateTime) {
+		this.updateTime = updateTime;
 	}
 	public String getName() {
 		return name;
@@ -71,7 +82,7 @@ public class CounsellorDetails {
 	@Override
 	public String toString() {
 		return "CounsellorDetails [cid=" + cid + ", name=" + name + ", email=" + email + ", password=" + password
-				+ ", phno=" + phno + ", enquiries=" + enquiries + "]";
+				+ ", phno=" + phno + ", createTime=" + createTime + ", updateTime=" + updateTime + "]";
 	}
 	
 	

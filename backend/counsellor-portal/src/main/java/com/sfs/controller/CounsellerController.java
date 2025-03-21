@@ -7,29 +7,38 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sfs.entities.CounsellorDetails;
 import com.sfs.entities.Enquiries;
 import com.sfs.excetion.ResourcesNotFoundException;
 import com.sfs.request.ReqParam;
-import com.sfs.response.StatusCount;
+import com.sfs.response.DashbordRes;
+import com.sfs.response.LoginRes;
 import com.sfs.service.CounsellorService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:5173")
 public class CounsellerController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(CounsellerController.class);
 	
-	@Autowired
+	
 	private CounsellorService service;
 	
+	public CounsellerController(CounsellorService service) {
+		this.service = service;
+	}
+
 	@GetMapping("/health")
 	public ResponseEntity<String> getHealth(){
 		return new ResponseEntity<>("Application Health is Good...", HttpStatus.OK);
@@ -48,18 +57,18 @@ public class CounsellerController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody CounsellorDetails details){
+	public ResponseEntity<LoginRes> login(@RequestBody CounsellorDetails details){
 		if(details == null) {
 			throw new ResourcesNotFoundException("Login Details should not be empty...");
 		}		
-		ResponseEntity<String> response= null;
-		LOGGER.info("User Registation Start...");
+		ResponseEntity<LoginRes> response= null;
+		LOGGER.info("User Login id -> " + details.getCid());
 		response = service.login(details);		
-		LOGGER.info("User Registration Successfully Complete...");		
+		LOGGER.info("User Login response -> "+response);		
 		return response;
 	}
 	
-	@PostMapping("/enquiry")
+	@PostMapping("/addenquiry")
 	public ResponseEntity<String> enquiry(@RequestBody Enquiries details){
 		if(details == null) {
 			throw new ResourcesNotFoundException("Enquiry Details should not be empty...");
@@ -72,58 +81,46 @@ public class CounsellerController {
 	}
 	
 	@GetMapping("/enquiry/{eid}")
-	public ResponseEntity<Enquiries> getEnquiry(@PathVariable long eid){		
+	public ResponseEntity<Enquiries> getEnquiry(@RequestParam int cid, @PathVariable long eid){		
 		ResponseEntity<Enquiries> response= null;
-		LOGGER.info("Enquiry Insert Start...");
-		response = service.getEnquiry(eid);		
-		LOGGER.info("Enquiry Insert Successfully Completed...");		
+		LOGGER.info("Enquiry Fetch : eid -> "+ eid);
+		response = service.getEnquiry(eid, cid);		
+		LOGGER.info("Enqury Fetch");		
+		return response;
+	}
+	
+	@PutMapping("/updateEn")
+	public ResponseEntity<String> updateEnquiry(@RequestBody Enquiries enquiry){		
+		ResponseEntity<String> response= null;
+		LOGGER.info("Enquiry Update : eid -> "+ enquiry.getEid());
+		response = service.updateEnquiry(enquiry);		
+		LOGGER.info("Enqury Updated");		
 		return response;
 	}
 	
 	@GetMapping("/statuscount/{cid}")
-	public ResponseEntity<List<StatusCount>> getEnquiryStatus(@PathVariable int cid){		
-		ResponseEntity<List<StatusCount>> response= null;
+	public ResponseEntity<DashbordRes> getEnquiryStatus(@PathVariable int cid){		
+		ResponseEntity<DashbordRes> response= null;
 		LOGGER.info("Enquiry Fetching...");
 		response = service.getStatusByCount(cid);	
 		LOGGER.info("Enquiry Data Fetched.");		
 		return response;
 	}
 	
-	
 	@GetMapping("/all/enquiries/{cid}")
-	public ResponseEntity<Enquiries[]> getAllEnquiries(@PathVariable int cid){
-		ResponseEntity<Enquiries[]> response = null;
+	public ResponseEntity<List<Enquiries>> getAllEnquiries(@PathVariable int cid){
+		ResponseEntity<List<Enquiries>> response = null;
 		LOGGER.info("All Enquiries Fetching...");
 		response = service.getAllEnquiries(cid);
 		LOGGER.info("All Enquiries Fetched.");
 		return response;
 	}
 	
-	@PostMapping("/classmode")
-	public ResponseEntity<Enquiries[]> getClassMode(@RequestBody ReqParam classMode){
-		ResponseEntity<Enquiries[]> response = null;
-		LOGGER.info("All Enquiries Fetching...");
-		response = service.getClassMode(classMode.getClassMode());
-		LOGGER.info("All Enquiries Fetched.");
-		return response;
+	@PostMapping("/filter/{cid}")
+	public ResponseEntity<List<Enquiries>> getByFilter(@RequestBody ReqParam req, @PathVariable int cid) {
+	    LOGGER.info("Fetching enquiries for CID: {} with Class Mode: {}", cid);
+	    ResponseEntity<List<Enquiries>> response = service.getByFilter(req, cid);
+	    LOGGER.info("All enquiries fetched.");
+	    return response;
 	}
-	
-	@PostMapping("/course")
-	public ResponseEntity<Enquiries[]> getCourse(@RequestBody ReqParam course){
-		ResponseEntity<Enquiries[]> response = null;
-		LOGGER.info("All Enquiries Fetching...");
-		response = service.getCourse(course.getCourse());
-		LOGGER.info("All Enquiries Fetched.");
-		return response;
-	}
-	
-	@PostMapping("/status")
-	public ResponseEntity<Enquiries[]> getStatus(@RequestBody ReqParam status){
-		ResponseEntity<Enquiries[]> response = null;
-		LOGGER.info("All Enquiries Fetching...");
-		response = service.getStatus(status.getStatus());
-		LOGGER.info("All Enquiries Fetched.");
-		return response;
-	}	
-
 }

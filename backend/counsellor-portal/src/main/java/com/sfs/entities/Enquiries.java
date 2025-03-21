@@ -1,5 +1,10 @@
 package com.sfs.entities;
 
+import java.time.LocalDate;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
@@ -30,6 +35,10 @@ public class Enquiries {
 	private String course;
 	@Column(name = "status")
 	private String status;
+	@CreationTimestamp
+	private LocalDate createTime;
+	@UpdateTimestamp
+	private LocalDate updateTime;
 	
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
